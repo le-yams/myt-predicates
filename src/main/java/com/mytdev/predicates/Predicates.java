@@ -49,14 +49,15 @@ public final class Predicates {
      * Drops longest prefix of elements that satisfy a predicate.
      *
      * @param <T>
-     * @param list the list to drop the elements from.
-     * @param predicate the predicate.
+     * @param list
+     * @param predicate the predicate used to test elements.
+     * @return the longest suffix of this list whose first element does not
+     * satisfy the given predicate.
      */
-    public static <T> void dropWhile(List<T> list, Predicate<T> predicate) {
-        int dropCount = prefixLength(list, predicate);
-        for (int i = 0; i < dropCount; i++) {
-            list.remove(0);
-        }
+    public static <T> List<T> dropWhile(List<T> list, Predicate<T> predicate) {
+        return new ArrayList<T>(list.subList(
+            prefixLength(list, predicate),
+            list.size()));
     }
 
     /**
@@ -78,21 +79,23 @@ public final class Predicates {
     }
 
     /**
-     * Drops the elements not satisfying the given predicate in the specified
-     * collection.
+     * Selects all elements of this list which satisfy a predicate.
      *
      * @param <T>
      * @param collection the collection to filter.
      * @param predicate the predicate used to test elements.
+     * @return a new list consisting of all elements of the specified collection
+     * that satisfy the given predicate p. The order of the elements is
+     * preserved if applicable.
      */
-    public static <T> void filter(Collection<T> collection, Predicate<T> predicate) {
-        final List<T> toRemove = new ArrayList<T>();
+    public static <T> List<T> filter(Collection<T> collection, Predicate<T> predicate) {
+        final List<T> result = new ArrayList<T>();
         for (T item : collection) {
-            if (!predicate.eval(item)) {
-                toRemove.add(item);
+            if (predicate.eval(item)) {
+                result.add(item);
             }
         }
-        collection.removeAll(toRemove);
+        return result;
     }
 
     /**
@@ -169,24 +172,27 @@ public final class Predicates {
     }
 
     /**
-     * Partitions the specified list in two lists according to a predicate. The
-     * elements that don't satisfy the predicate are removed from the specified
-     * collection and returned in a different list.
+     * Partitions the specified collection in two lists according to a predicate.
      *
      * @param <T>
      * @param collection the collection to partition.
      * @param predicate the predicate on which to partition.
-     * @return a list of all elements that not satisfy the predicate.
+     * @return a pair of lists: the first list consists of all elements that
+     * satisfy the given predicate and the second list consists of all elements
+     * that don't. The relative order of the elements in the resulting lists is
+     * the same as in the original list.
      */
-    public static <T> List<T> partition(Collection<T> collection, Predicate<T> predicate) {
+    public static <T> Pair<List<T>> partition(Collection<T> collection, Predicate<T> predicate) {
+        final List<T> matchingList = new ArrayList<T>();
         final List<T> unmatchingList = new ArrayList<T>();
         for (T item : collection) {
-            if (!predicate.eval(item)) {
+            if (predicate.eval(item)) {
+                matchingList.add(item);
+            } else {
                 unmatchingList.add(item);
             }
         }
-        collection.removeAll(unmatchingList);
-        return unmatchingList;
+        return new Pair<List<T>>(matchingList, unmatchingList);
     }
 
     /**
@@ -213,37 +219,59 @@ public final class Predicates {
 
     /**
      * Splits the specified list into a prefix/suffix pair according to a
-     * predicate. the suffix is removed from the list and returned as a new one.
+     * predicate.
      *
      * @param <T>
      * @param list the list to split.
      * @param predicate the predicate used to test elements.
-     * @return the suffix as a list.
+     * @return a pair consisting of the longest prefix of this list whose
+     * elements all satisfy p, and the rest of this list.
      */
-    public static <T> List<T> span(List<T> list, Predicate<T> predicate) {
+    public static <T> Pair<List<T>> span(List<T> list, Predicate<T> predicate) {
         final int spanIndex = prefixLength(list, predicate);
-        final List<T> list2 = list.subList(spanIndex, list.size() - 1);
-        while (spanIndex < list.size()) {
-            list.remove(spanIndex);
-        }
-        return list2;
+        return new Pair<List<T>>(
+            new ArrayList<T>(list.subList(0, spanIndex)),
+            new ArrayList<T>(list.subList(spanIndex, list.size())));
     }
 
     /**
-     * Drops elements of the specified list from the index of the first element
-     * that doesn't satisfy the given predicate.
+     * Takes longest prefix of elements that satisfy a predicate.
      *
      * @param <T>
      * @param list
      * @param predicate the predicate used to test elements.
+     * @return the longest prefix of this list whose elements all satisfy the
+     * given predicate.
      */
-    public static <T> void takeWhile(List<T> list, Predicate<T> predicate) {
-        int dropIndex = prefixLength(list, predicate);
-        while (dropIndex < list.size()) {
-            list.remove(dropIndex);
-        }
+    public static <T> List<T> takeWhile(List<T> list, Predicate<T> predicate) {
+        return new ArrayList<T>(list.subList(0, prefixLength(list, predicate)));
     }
 
     private Predicates() {
+    }
+
+    /**
+     * A simple immutable pair implementation.
+     *
+     * @param <T> the pair element type.
+     */
+    public static final class Pair<T> {
+
+        private final T $1;
+
+        private final T $2;
+
+        public Pair(T $1, T $2) {
+            this.$1 = $1;
+            this.$2 = $2;
+        }
+
+        public T _1() {
+            return $1;
+        }
+
+        public T _2() {
+            return $2;
+        }
     }
 }

@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.mytdev</groupId>
     <artifactId>myt-predicates</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>myt-predicates</name>

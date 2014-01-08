@@ -32,11 +32,11 @@ public abstract class PredicateComposite<T> extends AbstractPredicate<T> {
     /**
      * The underlying predicates.
      */
-    protected final Collection<Predicate<T>> predicates;
+    protected final Collection<Predicate<? super T>> predicates;
 
     /**
      * Creates a new instance of PredicateComposite with the specified
-     * predicates. The predicates are collection put in a collection with the
+     * predicates. The predicates are put in a collection with the
      * following order:
      * <ul>
      * <li>p1</li>
@@ -48,10 +48,10 @@ public abstract class PredicateComposite<T> extends AbstractPredicate<T> {
      * @param p2 predicate 2.
      * @param others more predicates.
      */
-    public PredicateComposite(Predicate<T> p1, Predicate<T> p2, Predicate<T>... others) {
+    public PredicateComposite(Predicate<? super T> p1, Predicate<? super T> p2, Predicate<? super T>... others) {
         assertNotNull(p1, "p1");
         assertNotNull(p2, "p2");
-        final List<Predicate<T>> list = new ArrayList<Predicate<T>>(Arrays.asList(others));
+        final List<Predicate<? super T>> list = new ArrayList<Predicate<? super T>>(Arrays.asList(others));
         list.add(0, p2);
         list.add(0, p1);
         predicates = Collections.unmodifiableCollection(list);

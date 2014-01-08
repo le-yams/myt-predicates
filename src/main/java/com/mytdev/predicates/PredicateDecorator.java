@@ -26,9 +26,9 @@ public abstract class PredicateDecorator<T> extends AbstractPredicate<T> {
     /**
      * The decorated predicate.
      */
-    protected final Predicate<T> decoratedPredicate;
+    protected final Predicate<? super T> decoratedPredicate;
 
-    public PredicateDecorator(Predicate<T> decoratedPredicate) {
+    public PredicateDecorator(Predicate<? super T> decoratedPredicate) {
         assertNotNull(decoratedPredicate, "decorated predicate");
         this.decoratedPredicate = decoratedPredicate;
     }

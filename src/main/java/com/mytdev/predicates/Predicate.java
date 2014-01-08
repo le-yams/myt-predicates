@@ -38,7 +38,7 @@ public interface Predicate<T> {
      * @param others more other predicates.
      * @return a new Predicate instance.
      */
-    Predicate<T> and(Predicate<T> predicate, Predicate<T>... others);
+    Predicate<T> and(Predicate<? super T> predicate, Predicate<? super T>... others);
 
     /**
      * Creates then returns a predicate which applies a logical OR between this
@@ -48,7 +48,7 @@ public interface Predicate<T> {
      * @param others more other predicates.
      * @return a new Predicate instance.
      */
-    Predicate<T> or(Predicate<T> predicate, Predicate<T>... others);
+    Predicate<T> or(Predicate<? super T> predicate, Predicate<? super T>... others);
 
     /**
      * Creates then return a predicate which apply a logical NOT to this

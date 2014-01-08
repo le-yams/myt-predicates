@@ -22,12 +22,12 @@ package com.mytdev.predicates;
  */
 public final class AndPredicate<T> extends PredicateComposite<T> {
 
-    public AndPredicate(Predicate<T> p1, Predicate<T> p2, Predicate<T>... others) {
+    public AndPredicate(Predicate<? super T> p1, Predicate<? super T> p2, Predicate<? super T>... others) {
         super(p1, p2, others);
     }
 
     public boolean eval(T candidate) {
-        for (Predicate<T> predicate : predicates) {
+        for (Predicate<? super T> predicate : predicates) {
             if (!predicate.eval(candidate)) {
                 return false;
             }

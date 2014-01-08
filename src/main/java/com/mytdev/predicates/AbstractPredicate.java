@@ -24,12 +24,12 @@ package com.mytdev.predicates;
 public abstract class AbstractPredicate<T> implements Predicate<T> {
 
     @Override
-    public final Predicate<T> and(Predicate<T> predicate, Predicate<T>... others) {
+    public final Predicate<T> and(Predicate<? super T> predicate, Predicate<? super T>... others) {
         return new AndPredicate<T>(this, predicate, others);
     }
 
     @Override
-    public final Predicate<T> or(Predicate<T> predicate, Predicate<T>... others) {
+    public final Predicate<T> or(Predicate<? super T> predicate, Predicate<? super T>... others) {
         return new OrPredicate<T>(this, predicate, others);
     }
 
